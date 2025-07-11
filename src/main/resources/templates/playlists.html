@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Minhas Playlists</title>
+</head>
+<body>
+    <h1>Minhas Playlists</h1>
+
+    <div th:if="${!playlists.isEmpty()}">
+        <ul>
+            <li th:each="playlist : ${playlists}">
+                <span th:text="${playlist}">Nome da Playlist</span>
+            </li>
+        </ul>
+    </div>
+
+    <div th:if="${playlists.isEmpty()}">
+       <p>Você não tem nenhuma playlist ou não conseguimos carregá-las.</p>
+    </div>
+
+    <a href="/">Voltar</a>
+</body>
+</html>

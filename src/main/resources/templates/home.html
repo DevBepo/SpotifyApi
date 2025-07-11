@@ -5,7 +5,12 @@
     <title>FriendPlaylist - Home</title>
 </head>
 <body>
-    <h1>Bem-vindo de volta, <span th:text="${username}"></span>!</h1>
-    <p>Login com Spotify foi um sucesso!</p>
+    <div th:if="${username}">
+        <h1>Bem-vindo de volta, <span th:text="${username}"></span>!</h1>
+        <p>Login com Spotify foi um sucesso!</p>
+        <br>
+        <a href="/playlists">Ver Minhas Playlists</a> <br>
+        <a href="/logout">Fazer Logout</a>
+    </div>
 </body>
 </html>
