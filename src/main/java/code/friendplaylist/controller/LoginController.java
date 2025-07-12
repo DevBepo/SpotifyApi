@@ -11,10 +11,10 @@ public class LoginController {
 
 
     @GetMapping("/")
-    public String login(Model model, @AuthenticationPrincipal OAuth2User principal) {
-        if (principal != null) {
-            String nome = principal.getAttribute("display_name");
-            model.addAttribute("username", nome);
+    public String login(Model modelUser, @AuthenticationPrincipal OAuth2User spotifyUser) {
+        if (spotifyUser != null) {
+            String nome = spotifyUser.getAttribute("display_name");
+            modelUser.addAttribute("username", nome);
 
             return "home";
         } else {

@@ -16,7 +16,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/login").permitAll()
                 .requestMatchers("/playlists").authenticated()
-                .anyRequest().permitAll() 
+                .requestMatchers("/api/**").permitAll()
+                .anyRequest().authenticated() 
             )
             .oauth2Login(withDefaults())
             .logout(logout -> logout
