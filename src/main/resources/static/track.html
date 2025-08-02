@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Playlist</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        .playlist-container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #181818;
+            border-radius: 8px;
+            padding: 24px;
+        }
+        h1 {
+            border-bottom: 1px solid #282828;
+            padding-bottom: 10px;
+        }
+        .playlist-header {
+            display: grid;
+            grid-template-columns: 40px 4fr 2fr 100px;
+            gap: 16px;
+            padding: 0 16px;
+            color: #b3b3b3;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+        .header-title { grid-column: 2; }
+        .header-album { grid-column: 3; }
+        .header-duration { grid-column: 4; text-align: right; }
+        .track-item {
+            display: grid;
+            grid-template-columns: 40px 4fr 2fr 100px;
+            gap: 16px;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+        .track-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .album-art {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .track-info { display: flex; flex-direction: column; }
+        .track-name { font-size: 16px; font-weight: 500; }
+        .artist-name { font-size: 14px; color: #b3b3b3; }
+        .album-name {
+            color: #b3b3b3;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .duration { color: #b3b3b3; font-size: 14px; text-align: right; }
+        #playlist-title {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="playlist-container">
+        <h1 id="playlist-title">Carregando Playlist...</h1>
+        
+        <div class="playlist-header">
+            <div class="header-title">Título</div>
+            <div class="header-album">Álbum</div>
+            <div class="header-duration">Duração</div>
+        </div>
+
+        <div id="playlist-content"></div>
+    </div>
+
+    <script>
+    // Função para renderizar a playlist (igual à sua)
+    function renderPlaylist(playlistData) {
+        const contentContainer = document.getElementById('playlist-content');
+        const titleContainer = document.getElementById('playlist-title');
+        contentContainer.innerHTML = '';
+
+        if (!playlistData || !playlistData.items) {
+            titleContainer.textContent = "Erro ao carregar dados";
+            console.error("Dados da playlist inválidos ou não fornecidos.");
+            return;
+        }
+
+        titleContainer.textContent = `Exibindo ${playlistData.total} Músicas`;
+
+        function formatDuration(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        playlistData.items.forEach(item => {
+            const track = item.track;
+            if (!track) return;
+            const imageUrl = track.album.images[0]?.url || 'https://via.placeholder.com/40';
+            const trackName = track.name;
+            const artistName = track.artists.map(artist => artist.name).join(', ');
+            const albumName = track.album.name;
+            const duration = formatDuration(track.duration_ms);
+
+            const trackElement = document.createElement('div');
+            trackElement.className = 'track-item';
+            trackElement.innerHTML = `
+                <img class="album-art" src="${imageUrl}" alt="Capa do álbum ${albumName}">
+                <div class="track-info">
+                    <div class="track-name">${trackName}</div>
+                    <div class="artist-name">${artistName}</div>
+                </div>
+                <div class="album-name">${albumName}</div>
+                <div class="duration">${duration}</div>
+            `;
+            contentContainer.appendChild(trackElement);
+        });
+    }
+
+    // NOVO: Buscar playlistId da URL e fazer fetch dos dados reais
+    document.addEventListener('DOMContentLoaded', async () => {
+        const params = new URLSearchParams(window.location.search);
+        const playlistId = params.get('playlistId');
+        const titleContainer = document.getElementById('playlist-title');
+
+        if (!playlistId) {
+            titleContainer.textContent = "Playlist não encontrada.";
+            return;
+        }
+
+        try {
+            const response = await fetch(`/playlists/${playlistId}/tracks`);
+            if (!response.ok) throw new Error('Erro ao buscar músicas');
+            const data = await response.json();
+            renderPlaylist(data);
+        } catch (e) {
+            titleContainer.textContent = "Erro ao carregar músicas.";
+            console.error(e);
+        }
+    });
+</script>
+
+
+</body>
+</html>

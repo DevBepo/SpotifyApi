@@ -1,0 +1,52 @@
+/* --- Estilos da Barra de Busca e Resultados --- */
+.search-container {
+    margin: 30px auto 20px auto;
+    width: 100vw;
+    max-width: 450px; /* Bem mais largo para digitação confortável */
+    position: relative;
+}
+
+#user-search-input {
+    width: 100%;
+    padding: 16px 22px; /* Aumentado para mais altura */
+    font-size: 1.15rem; /* Um pouco maior */
+    border-radius: 50px;
+    border: 1px solid #535353;
+    background-color: #282828;
+    color: #ffffff;
+}
+
+#search-results-container {
+    background-color: #282828;
+    border-radius: 8px;
+    margin-top: 5px;
+    position: absolute;
+    width: 100%;
+    z-index: 10;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    text-decoration: none;
+    color: #ffffff;
+    border-bottom: 1px solid #333;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background-color: #3e3e3e;
+}
+
+.search-result-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+}

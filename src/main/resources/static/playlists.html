@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Playlists</title>
+    <link rel="stylesheet" href="/css/styles.css"> 
+</head>
+<body class="playlists-page"> <header class="main-header">
+        <a href="/home.html" class="nav-link">&larr; Voltar para Home</a>
+        <h1>Suas Playlists</h1>
+    </header>
+
+    <main>
+        <div id="playlist-container"></div>
+        
+        <div id="tracks-container" class="hidden"></div>
+    </main>
+
+    <div id="loading-indicator" class="hidden">
+        <div class="spinner"></div>
+    </div>
+    
+    <div id="error-message" class="hidden">
+        <p>Ocorreu um erro ao carregar.</p>
+    </div>
+
+    <div class="center-container">
+        <button id="load-more-btn" class="hidden">Carregar Mais</button>
+        <button id="back-to-playlists-btn" class="hidden">← Voltar para Playlists</button>
+    </div>
+
+    <script src="/js/playlists.js" defer></script>
+</body>
+</html>

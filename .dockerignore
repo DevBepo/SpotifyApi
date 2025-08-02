@@ -1,0 +1,19 @@
+.git
+.gitignore
+.env
+
+# Ignorar arquivos da IDE
+.idea/
+.vscode/
+*.iml
+
+# Ignorar a pasta de build do Maven, que será gerada dentro do contêiner
+/target/
+
+# Ignorar arquivos de log e temporários
+*.log
+*.tmp
+
+# Ignorar arquivos do sistema operacional
+.DS_Store
+Thumbs.db

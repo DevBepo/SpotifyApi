@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>FriendPlaylist - Home</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/search.css">
+</head>
+<body class="home-page">
+
+<div class="search-container">
+    <input type="search" id="user-search-input" placeholder="Buscar usuários no FriendPlaylist...">
+    <div id="search-results-container">
+    </div>
+</div>
+
+<div class="container">
+    <h1>Bem-vindo, <span id="display_name">Carregando...</span>!</h1>
+
+    <div id="profileImageContainer" style="display: none; margin-top: 20px;">
+        <img id="profileImage" src="" alt="Foto de Perfil" style="width:100px; height:100px; border-radius:50%;">
+    </div>
+
+    <div style="margin-top: 30px;">
+        <a href="/playlists.html" class="button">Ver Minhas Playlists</a>
+        <a href id="logoutBtn" class="button logout">Logout</a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Página carregada, iniciando busca de dados do usuário...');
+        
+        // Função para buscar dados do usuário
+        function fetchUserData() {
+            fetch('/user/me', {
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                console.log('Resposta recebida:', response.status, response.statusText);
+                
+                if (response.status === 401) {
+                    console.log('Usuário não autenticado, redirecionando para login...');
+                    window.location.href = '/login.html';
+                    return null;
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return response.json();
+            })
+            .then(user => {
+                if (user) {
+                    console.log('Dados do usuário recebidos:', user);
+                    
+                    // Preenche o nome do usuário
+                    if (user.display_name) {
+                        document.getElementById('display_name').textContent = user.display_name;
+                        console.log('Nome do usuário definido:', user.display_name);
+                    } else {
+                        console.warn('displayName não encontrado nos dados do usuário');
+                        document.getElementById('display_name').textContent = 'Nome não disponível';
+                    }
+
+                    // Verifica se o usuário tem uma imagem de perfil
+                    if (user.imageUrl) {
+                        console.log('URL da imagem encontrada:', user.imageUrl);
+                        const imgElement = document.getElementById('profileImage');
+                        const imgContainer = document.getElementById('profileImageContainer');
+
+                        imgElement.src = user.imageUrl;
+                        imgContainer.style.display = 'block';
+                    } else {
+                        console.log('Nenhuma URL de imagem encontrada');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar dados do usuário:', error);
+                document.getElementById('display_name').textContent = 'Erro ao carregar';
+                
+                // Se houver erro, tenta redirecionar para login após um delay
+                setTimeout(() => {
+                    window.location.href = '/login.html';
+                }, 2000);
+            });
+        }
+
+        // Inicia a busca dos dados do usuário
+        fetchUserData();
+    });
+      document.getElementById('logoutBtn').addEventListener('click', function(event) {
+        event.preventDefault(); // Impede o redirecionamento padrão
+        fetch('/logout', {
+            method: 'POST',
+            credentials: 'include'
+        }).then(() => {
+            window.location.href = '/'; // Redireciona após logout
+        });
+    });
+</script>
+    <script src="js/playlists.js"></script>
+    <script src="js/search.js"></script>
+</body>
+</html>

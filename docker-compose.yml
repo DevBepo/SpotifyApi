@@ -1,0 +1,33 @@
+services:
+  app:
+    container_name: friendplaylist-app
+    build: .
+    ports:
+      - "8081:8081"
+    environment:
+      - spring.datasource.url=jdbc:${DB_URL}
+      - spring.datasource.username=${DB_USER}
+      - spring.datasource.password=${POSTGRES_PASSWORD}
+      - SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}
+      - SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}
+      - server.port=8081
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/keys/friendplaylists-dd937003097b.json
+    volumes:
+      - C:/keys/friendplaylists-dd937003097b.json:/app/keys/friendplaylists-dd937003097b.json:ro
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15
+    container_name: friendplaylist-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: friendplaylist_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

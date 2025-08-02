@@ -1,0 +1,366 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #1DB954 0%, #191414 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    padding: 60px 40px;
+    text-align: center;
+    max-width: 450px;
+    width: 100%;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #191414;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #1DB954, #1ed760);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+.welcome-message {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #191414;
+    margin-bottom: 30px;
+    line-height: 1.3;
+}
+
+.description {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.login-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #1DB954, #1ed760);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 16px 32px;
+    border-radius: 50px;
+    box-shadow: 0 10px 30px rgba(29, 185, 84, 0.3);
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    min-width: 280px;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(29, 185, 84, 0.4);
+    background: linear-gradient(135deg, #1ed760, #1DB954);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.spotify-icon {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+.features {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.feature-icon {
+    width: 20px;
+    height: 20px;
+    fill: #1DB954;
+    flex-shrink: 0;
+}
+
+.footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    font-size: 0.9rem;
+    color: #999;
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 40px 30px;
+        margin: 10px;
+    }
+    
+    .welcome-message {
+        font-size: 1.5rem;
+    }
+    
+    .logo {
+        font-size: 2rem;
+    }
+    
+    .login-btn {
+        min-width: 100%;
+        padding: 14px 24px;
+    }
+}
+
+/* Animação de pulso para o botão */
+@keyframes pulse {
+    0% { box-shadow: 0 10px 30px rgba(29, 185, 84, 0.3); }
+    50% { box-shadow: 0 15px 40px rgba(29, 185, 84, 0.5); }
+    100% { box-shadow: 0 10px 30px rgba(29, 185, 84, 0.3); }
+}
+
+.login-btn {
+    animation: pulse 2s infinite;
+}
+
+.login-btn:hover {
+    animation: none;
+}
+/* /css/styles.css */
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+/* Estilo para a página de login (com gradiente) */
+body {
+font-family: 'Inter', sans-serif;
+background: linear-gradient(135deg, #1DB954 0%, #191414 100%);
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 20px;
+}
+
+/* Estilo para páginas de conteúdo (home, playlists) com fundo escuro */
+body.content-page {
+background: #121212;
+color: #ffffff;
+display: block; /* Remove o display flex */
+}
+
+/* Container principal (usado em login.html e home.html) */
+.container {
+background: rgba(255, 255, 255, 0.95);
+backdrop-filter: blur(10px);
+border-radius: 20px;
+box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+padding: 60px 40px;
+text-align: center;
+max-width: 450px;
+width: 100%;
+animation: fadeInUp 0.6s ease-out;
+color: #191414; /* Cor de texto para o container branco */
+}
+
+/* Em páginas de conteúdo, o container é diferente */
+.content-page .container {
+background: none;
+backdrop-filter: none;
+box-shadow: none;
+padding: 20px;
+max-width: 1200px;
+margin: 0 auto;
+color: #ffffff; /* Cor de texto para páginas escuras */
+}
+
+/* Outros estilos de login.html */
+.logo, .subtitle, .welcome-message, .description, .login-btn, .features, .footer {
+/* Mantém os estilos originais */
+}
+/* ... (copie o resto dos seus estilos de login.html aqui para garantir) ... */
+
+/* Estilos para a página de playlists */
+body.playlists-page {
+    background: #121212;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: block;
+    padding: 0;
+}
+
+main {
+    max-width: 1200px;
+    margin: 32px auto 0 auto;
+    padding: 0 16px;
+}
+
+.main-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 20px 40px;
+max-width: 1200px;
+margin: 0 auto;
+color: #ffffff;
+}
+
+.main-header h1 {
+color: #1DB954;
+}
+
+.nav-link {
+color: #ffffff;
+text-decoration: none;
+font-size: 1rem;
+font-weight: 500;
+}
+.nav-link:hover {
+text-decoration: underline;
+}
+
+/* Grid para os cards das playlists */
+#playlist-container {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+gap: 24px;
+padding: 20px 40px;
+max-width: 1200px;
+margin: 0 auto;
+}
+
+/* Estilo do card individual */
+.playlist-card {
+background-color: #181818;
+border-radius: 8px;
+padding: 16px;
+transition: background-color 0.3s;
+}
+.playlist-card:hover {
+background-color: #282828;
+}
+
+.playlist-card img {
+width: 100%;
+border-radius: 4px;
+aspect-ratio: 1 / 1;
+object-fit: cover;
+margin-bottom: 12px;
+}
+
+.playlist-card h3 {
+margin: 0 0 4px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+font-size: 1rem;
+font-weight: 600;
+}
+
+.playlist-card p {
+margin: 0;
+font-size: 0.85rem;
+color: #b3b3b3;
+}
+
+/* Centralizador para o botão e indicador */
+.center-container {
+text-align: center;
+padding: 40px 20px;
+}
+
+/* Botão "Carregar Mais" e Logout */
+#load-more-btn, .button {
+background: #1DB954;
+color: white;
+border: none;
+border-radius: 500px;
+padding: 12px 24px;
+font-size: 1em;
+font-weight: bold;
+cursor: pointer;
+text-decoration: none;
+display: inline-block;
+transition: transform 0.2s;
+}
+#load-more-btn:hover, .button:hover {
+transform: scale(1.05);
+}
+
+.button.logout {
+background: #535353;
+margin-left: 10px;
+}
+
+/* Classe utilitária para esconder elementos */
+.hidden {
+display: none;
+}
+
+/* Animação herdada do seu CSS original */
+@keyframes fadeInUp {
+from { opacity: 0; transform: translateY(30px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.playlist-card {
+text-decoration: none;
+color: inherit; 
+display: block;
+position: relative;
+}
