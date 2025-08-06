@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         // Redireciona ao clicar no usuário para playlists.html com user_id como parâmetro
                         userElement.addEventListener('click', function() {
-                            window.location.href = `playlists.html?user_id=${encodeURIComponent(user.spotifyUserId || user.id)}`;
+                            window.location.href = `playlists.html?user_id=${encodeURIComponent(user.spotifyUserId || user.id)}&userName=${encodeURIComponent(user.displayName)}`;
                         });
 
                         searchResultsContainer.appendChild(userElement);
