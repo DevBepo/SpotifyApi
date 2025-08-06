@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import code.friendplaylist.domain.User;
 import code.friendplaylist.dto.UserDto;
 import code.friendplaylist.repository.UserRepository;
+import code.friendplaylist.dto.UserSearchResultDTO;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -132,6 +133,3 @@ public UserDto getCurrentUser(OAuth2AuthenticationToken authentication) {
     }
 
 }
-
-
-    

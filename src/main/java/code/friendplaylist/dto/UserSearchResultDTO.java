@@ -1,4 +1,4 @@
-package code.friendplaylist.services;
+package code.friendplaylist.dto;
 
 public record UserSearchResultDTO(  String spotifyUserId,
 String displayName,
