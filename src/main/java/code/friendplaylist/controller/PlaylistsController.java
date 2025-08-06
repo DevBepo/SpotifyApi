@@ -31,6 +31,7 @@ public class PlaylistsController {
             @PathVariable("user_id") String userId,
             OAuth2AuthenticationToken authentication) {
                 String accessToken = userService.getAccessToken(authentication);
+                System.out.println("Buscando playlists para o usuário: " + userId); // Debug log
                 PlaylistResponse response = playlistClient.getUsersPlaylists("Bearer " + accessToken, userId) ;
                 return ResponseEntity.ok(response);
             }

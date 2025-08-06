@@ -144,6 +144,8 @@ function createPlaylistCard(playlist) {
 async function fetchPlaylists(url) {
     if (!url) return;
 
+    console.log('Fetching playlists from URL:', url); // Debug log
+
     loadingIndicator.classList.remove('hidden');
     errorMessage.classList.add('hidden');
     loadMoreBtn.classList.add('hidden');
@@ -205,7 +207,8 @@ function getQueryParam(param) {
 
 // Ajuste do carregamento inicial
 document.addEventListener('DOMContentLoaded', () => {
-    const userId = getQueryParam('user');
+    // Busca tanto 'user' quanto 'user_id' para compatibilidade
+    const userId = getQueryParam('user') || getQueryParam('user_id');
     const userName = getQueryParam('userName') || userId; // Fallback para userId se userName não estiver disponível
     let initialUrl;
 
@@ -217,8 +220,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (userId) {
         initialUrl = `/users/${encodeURIComponent(userId)}/playlists`;
+        nextUrl = initialUrl; // Atualiza a nextUrl inicial também
     } else {
         initialUrl = API_BASE_URL;
+        nextUrl = API_BASE_URL;
     }
     fetchPlaylists(initialUrl);
 });
@@ -243,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         searchTimeout = setTimeout(async () => {
             try {
-                const response = await fetch(`/api/users/search?q=${query}`);
+                const response = await fetch(`/user/search?q=${query}`);
                 if (!response.ok) return;
 
                 const users = await response.json();
@@ -256,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     users.forEach(user => {
                         const userElement = document.createElement('a');
                         // Passo 3: O link que leva para as playlists do usuário
-                        userElement.href = `/playlists.html?user=${user.spotifyUserId}&userName=${encodeURIComponent(user.displayName)}`;
+                        userElement.href = `/playlists.html?user_id=${user.spotifyUserId}&userName=${encodeURIComponent(user.displayName)}`;
                         userElement.className = 'search-result-item';
                         userElement.innerHTML = `
                             <img src="${user.imageUrl}" alt="${user.displayName}">

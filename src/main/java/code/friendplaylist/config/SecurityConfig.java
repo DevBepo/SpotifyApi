@@ -18,9 +18,9 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/login/**", "/login.html", "/css/**", "/error", "/css/**", "/js/**").permitAll()
-                .requestMatchers("/user/me", "/user/auth-status").authenticated()
+                .requestMatchers("/user/me", "/user/auth-status", "/user/search").authenticated()
                 .requestMatchers("/home.html").authenticated()
-                .requestMatchers("/playlists", "/playlists/**").authenticated()
+                .requestMatchers("/playlists", "/playlists/**", "/users/*/playlists").authenticated()
                 .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
