@@ -30,8 +30,7 @@ public class PlaylistsController {
      public ResponseEntity<PlaylistResponse> getUsersPlaylists(
             @PathVariable("user_id") String userId,
             OAuth2AuthenticationToken authentication) {
-                String accessToken = userService.getAccessToken(authentication);  
-                userId = authentication.getName();
+                String accessToken = userService.getAccessToken(authentication);
                 PlaylistResponse response = playlistClient.getUsersPlaylists("Bearer " + accessToken, userId) ;
                 return ResponseEntity.ok(response);
             }

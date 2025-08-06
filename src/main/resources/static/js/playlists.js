@@ -205,8 +205,16 @@ function getQueryParam(param) {
 
 // Ajuste do carregamento inicial
 document.addEventListener('DOMContentLoaded', () => {
-    const userId = getQueryParam('user_id');
+    const userId = getQueryParam('user');
+    const userName = getQueryParam('userName') || userId; // Fallback para userId se userName não estiver disponível
     let initialUrl;
+
+    // Atualizar o título da página
+    const headerTitle = document.querySelector('.main-header h1');
+    if (userId && headerTitle) {
+        headerTitle.textContent = userName ? `Playlists de ${userName}` : `Playlists do usuário ${userId}`;
+    }
+
     if (userId) {
         initialUrl = `/users/${encodeURIComponent(userId)}/playlists`;
     } else {
@@ -248,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     users.forEach(user => {
                         const userElement = document.createElement('a');
                         // Passo 3: O link que leva para as playlists do usuário
-                        userElement.href = `/playlists.html?user=${user.spotifyUserId}`;
+                        userElement.href = `/playlists.html?user=${user.spotifyUserId}&userName=${encodeURIComponent(user.displayName)}`;
                         userElement.className = 'search-result-item';
                         userElement.innerHTML = `
                             <img src="${user.imageUrl}" alt="${user.displayName}">
