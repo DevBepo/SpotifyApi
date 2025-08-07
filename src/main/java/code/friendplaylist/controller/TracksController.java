@@ -20,7 +20,7 @@ public class TracksController {
          this.userService = userService;
      }
 
-     @GetMapping("/playlists/{playlist_id}/tracks")
+     @GetMapping("/api/playlists/{playlist_id}/tracks")
      public ResponseEntity<SpotifyTrackResponse> getPlaylistTracks(
             @PathVariable("playlist_id") String playlistId,
             OAuth2AuthenticationToken authentication) {
