@@ -149,10 +149,18 @@
     function createCommentElement(comment) {
         const commentDiv = document.createElement('div');
         commentDiv.className = 'comment';
+
+        // URL da imagem padrão caso o usuário não tenha foto
+        const defaultImageUrl = 'https://via.placeholder.com/40x40/1DB954/ffffff?text=U';
+        const imageUrl = comment.authorImageUrl || defaultImageUrl;
+
         commentDiv.innerHTML = `
-            <div class="comment-author">${comment.author}</div>
-            <div class="comment-text">${comment.text}</div>
-            <div class="comment-date">${new Date(comment.createdAt).toLocaleString('pt-BR')}</div>
+            <img src="${imageUrl}" alt="Foto do usuário" class="comment-author-img" onerror="this.src='${defaultImageUrl}'">
+            <div class="comment-content">
+                <div class="comment-author-name">${comment.author}</div>
+                <p class="comment-text">${comment.text}</p>
+                <div class="comment-date">${new Date(comment.createdAt).toLocaleString('pt-BR')}</div>
+            </div>
         `;
         return commentDiv;
     }

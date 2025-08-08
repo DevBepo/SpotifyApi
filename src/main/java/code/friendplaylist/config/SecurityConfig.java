@@ -22,6 +22,8 @@ public class SecurityConfig {
                 .requestMatchers("/home.html").authenticated()
                 .requestMatchers("/playlists", "/playlists/**", "/users/*/playlists").authenticated()
                 .requestMatchers("/api/playlists/{playlistId}/rate").authenticated()
+                .requestMatchers("/api/playlists/{playlistId}/comments").authenticated() // Comentários precisam de autenticação
+                .requestMatchers("/api/playlists/{playlistId}/average").permitAll() // Média pode ser pública
                 .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
@@ -53,8 +55,8 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOriginPattern("");
-        configuration.addAllowedHeader("");
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

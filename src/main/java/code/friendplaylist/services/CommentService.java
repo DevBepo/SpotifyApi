@@ -1,0 +1,53 @@
+package code.friendplaylist.services;
+
+import code.friendplaylist.domain.Comment;
+import code.friendplaylist.domain.User;
+import code.friendplaylist.dto.CommentDto;
+import code.friendplaylist.dto.CommentResponseDto;
+import code.friendplaylist.repository.CommentRepository;
+import code.friendplaylist.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class CommentService {
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Transactional
+    public CommentResponseDto addComment(String playlistId, CommentDto commentDto, String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + userId));
+
+        Comment comment = new Comment(user, playlistId, commentDto.getText());
+        Comment savedComment = commentRepository.save(comment);
+
+        return convertToResponseDto(savedComment);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentResponseDto> getCommentsByPlaylistId(String playlistId) {
+        List<Comment> comments = commentRepository.findByPlaylistIdOrderByCreatedAtDesc(playlistId);
+        return comments.stream()
+                .map(this::convertToResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    private CommentResponseDto convertToResponseDto(Comment comment) {
+        return new CommentResponseDto(
+                comment.getId(),
+                comment.getUser().getDisplayName(),
+                comment.getUser().getImageUrl(),
+                comment.getText(),
+                comment.getCreatedAt()
+        );
+    }
+}
