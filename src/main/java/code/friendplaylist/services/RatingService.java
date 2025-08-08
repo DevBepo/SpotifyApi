@@ -21,11 +21,11 @@ public class RatingService {
     private UserRepository userRepository;
 
     @Transactional
-    public void saveRating(String playlistId, RatingDto ratingDto, String userNickname) {
-        User user = userRepository.findByNickname(userNickname)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    public void saveRating(String playlistId, RatingDto ratingDto, String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + userId));
 
-        Optional<Rating> existingRating = ratingRepository.findByUserIdAndPlaylistId(user.getId(), playlistId);
+        Optional<Rating> existingRating = ratingRepository.findByUser_IdAndPlaylistId(user.getId(), playlistId);
 
         Rating rating = existingRating.orElse(new Rating(user, playlistId, ratingDto.getRating()));
         if (existingRating.isPresent()) {
@@ -36,11 +36,11 @@ public class RatingService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Integer> getRating(String playlistId, String userNickname) {
-        User user = userRepository.findByNickname(userNickname)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    public Optional<Integer> getRating(String playlistId, String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + userId));
 
-        return ratingRepository.findByUserIdAndPlaylistId(user.getId(), playlistId)
+        return ratingRepository.findByUser_IdAndPlaylistId(user.getId(), playlistId)
                 .map(Rating::getScore);
     }
 }

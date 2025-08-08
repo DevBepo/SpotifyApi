@@ -21,5 +21,4 @@ public class User {
     private Integer followers;
     private String imageUrl;
     private String spotifyUri;
-    private String nickname;
 }

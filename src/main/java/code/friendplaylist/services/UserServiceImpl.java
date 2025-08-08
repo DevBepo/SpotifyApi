@@ -67,7 +67,6 @@ public class UserServiceImpl implements UserService {
         user.setEmail(spotifyUser.getAttribute("email"));
         user.setCountry(spotifyUser.getAttribute("country"));
         user.setSpotifyUri(spotifyUser.getAttribute("uri"));
-        user.setNickname(spotifyUser.getAttribute("login"));
 
         // Extrai o número de seguidores de forma segura
         Map<String, Object> followersMap = spotifyUser.getAttribute("followers");
