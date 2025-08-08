@@ -13,12 +13,15 @@
             <h1 id="playlist-title">Carregando Playlist...</h1>
             <div class="rating-container">
                 <h3>Avalie esta Playlist:</h3>
+                <div id="average-rating" class="average-rating">
+                    <span id="average-rating-text">Carregando média...</span>
+                </div>
                 <div class="stars">
-                    <span class="star" data-value="1">&#9733;</span>
-                    <span class="star" data-value="2">&#9733;</span>
-                    <span class="star" data-value="3">&#9733;</span>
-                    <span class="star" data-value="4">&#9733;</span>
-                    <span class="star" data-value="5">&#9733;</span>
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
                 </div>
                 <p id="rating-message"></p>
             </div>
@@ -52,11 +55,12 @@
             return;
         }
 
-        // Carrega as músicas, comentários e inicializa a avaliação em paralelo
+        // Carrega as músicas, comentários, média de avaliações e inicializa a avaliação em paralelo
         await Promise.all([
             fetchAndDisplayTracks(playlistId),
             fetchAndDisplayComments(playlistId),
-            initializeRating(playlistId) // Adicionado para o sistema de avaliação
+            fetchAndDisplayAverageRating(playlistId), // Nova função para buscar a média
+            initializeRating(playlistId)
         ]);
 
         // Adiciona o evento de clique ao botão de postar
@@ -99,43 +103,56 @@
             const track = item.track;
             if (!track || !track.album) return;
             const imageUrl = track.album.images[0]?.url || 'https://via.placeholder.com/40';
+
             const trackElement = document.createElement('div');
             trackElement.className = 'track-item';
             trackElement.innerHTML = `
-                <img class="album-art" src="${imageUrl}" alt="Capa">
                 <div class="track-info">
-                    <div class="track-name">${track.name}</div>
-                    <div class="artist-name">${track.artists.map(a => a.name).join(', ')}</div>
+                    <img src="${imageUrl}" alt="Album Cover" class="album-cover">
+                    <div class="track-details">
+                        <div class="track-title">${track.name}</div>
+                        <div class="track-artist">${track.artists.map(artist => artist.name).join(', ')}</div>
+                    </div>
                 </div>
-                <div class="album-name">${track.album.name}</div>
-                <div class="duration">${formatDuration(track.duration_ms)}</div>
+                <div class="track-album">${track.album.name}</div>
+                <div class="track-duration">${formatDuration(track.duration_ms)}</div>
             `;
             contentContainer.appendChild(trackElement);
         });
     }
 
     async function fetchAndDisplayComments(playlistId) {
-        const commentsList = document.getElementById('comments-list');
-            if (comments.length === 0) {
-                commentsList.innerHTML = '<p>Nenhum comentário ainda. Seja o primeiro!</p>';
-            } else {
-                comments.forEach(comment => {
-                    const commentElement = createCommentElement(comment);
-                    commentsList.appendChild(commentElement);
-                });
-            }
+        try {
+            const response = await fetch(`/api/playlists/${playlistId}/comments`);
+            if (!response.ok) throw new Error('Erro ao buscar comentários');
+            const comments = await response.json();
+            renderComments(comments);
+        } catch (error) {
+            console.error('Erro ao carregar comentários:', error);
+        }
     }
-    
+
+    function renderComments(comments) {
+        const commentsList = document.getElementById('comments-list');
+        commentsList.innerHTML = '';
+
+        if (comments.length === 0) {
+            commentsList.innerHTML = '<p>Nenhum comentário ainda. Seja o primeiro a comentar!</p>';
+            return;
+        }
+
+        comments.forEach(comment => {
+            commentsList.appendChild(createCommentElement(comment));
+        });
+    }
+
     function createCommentElement(comment) {
         const commentDiv = document.createElement('div');
         commentDiv.className = 'comment';
         commentDiv.innerHTML = `
-            <img class="comment-author-img" src="${comment.authorImageUrl || 'https://via.placeholder.com/40'}" alt="Avatar">
-            <div class="comment-content">
-                <strong class="comment-author-name">${comment.authorName}</strong>
-                <p>${comment.text}</p>
-                <span class="comment-date">${new Date(comment.createdAt).toLocaleString('pt-BR')}</span>
-            </div>
+            <div class="comment-author">${comment.author}</div>
+            <div class="comment-text">${comment.text}</div>
+            <div class="comment-date">${new Date(comment.createdAt).toLocaleString('pt-BR')}</div>
         `;
         return commentDiv;
     }
@@ -144,7 +161,11 @@
         const commentInput = document.getElementById('comment-input');
         const postCommentBtn = document.getElementById('post-comment-btn');
         const text = commentInput.value.trim();
-        if (!text) return;
+
+        if (!text) {
+            alert('Por favor, escreva um comentário antes de enviar.');
+            return;
+        }
 
         postCommentBtn.disabled = true;
         postCommentBtn.textContent = 'Enviando...';
@@ -170,6 +191,35 @@
         } finally {
             postCommentBtn.disabled = false;
             postCommentBtn.textContent = 'Enviar';
+        }
+    }
+
+    async function fetchAndDisplayAverageRating(playlistId) {
+        try {
+            const response = await fetch(`/api/playlists/${playlistId}/average`);
+            if (!response.ok) throw new Error('Erro ao buscar média de avaliações');
+            
+            const data = await response.json();
+            displayAverageRating(data.averageRating, data.ratingCount);
+        } catch (error) {
+            console.error('Erro ao carregar média de avaliações:', error);
+            document.getElementById('average-rating-text').textContent = 'Erro ao carregar média';
+        }
+    }
+
+    function displayAverageRating(average, count) {
+        const averageRatingText = document.getElementById('average-rating-text');
+        
+        if (count === 0) {
+            averageRatingText.textContent = 'Ainda não há avaliações';
+        } else {
+            const roundedAverage = Math.round(average * 10) / 10; // Arredonda para 1 casa decimal
+            const starsText = '★'.repeat(Math.floor(roundedAverage)) + '☆'.repeat(5 - Math.floor(roundedAverage));
+            averageRatingText.innerHTML = `
+                <span class="average-stars">${starsText}</span>
+                <span class="average-number">${roundedAverage}/5</span>
+                <span class="rating-count">(${count} avaliação${count !== 1 ? 'ões' : ''})</span>
+            `;
         }
     }
 
@@ -227,6 +277,8 @@
                         throw new Error('Falha ao enviar avaliação.');
                     }
                     setFinalRating(rating);
+                    // Atualiza a média após o usuário avaliar
+                    await fetchAndDisplayAverageRating(playlistId);
                     console.log('Avaliação enviada com sucesso!');
                 } catch (error) {
                     console.error(error);

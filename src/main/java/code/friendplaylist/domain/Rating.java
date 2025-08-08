@@ -3,6 +3,7 @@ package code.friendplaylist.domain;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "tb_rating")
 public class Rating {
 
     @Id

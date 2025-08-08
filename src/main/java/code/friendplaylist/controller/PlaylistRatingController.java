@@ -9,30 +9,25 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
-public class RatingController {
+@RequestMapping("/api/playlists")
+public class PlaylistRatingController {
+
+    private final RatingService ratingService;
 
     @Autowired
-    private RatingService ratingService;
+    public PlaylistRatingController(RatingService ratingService) {
+        this.ratingService = ratingService;
+    }
 
-    @PostMapping("/api/playlists/{playlistId}/rate")
+    @PostMapping("/{playlistId}/rate")
     public ResponseEntity<Void> ratePlaylist(@PathVariable String playlistId, @RequestBody RatingDto ratingDto, @AuthenticationPrincipal OAuth2User principal) {
         String userId = principal.getName();
         ratingService.saveRating(playlistId, ratingDto, userId);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/api/playlists/{playlistId}/rate")
-    public ResponseEntity<?> getRating(@PathVariable String playlistId, @AuthenticationPrincipal OAuth2User principal) {
-        String userId = principal.getName();
-        return ratingService.getRating(playlistId, userId)
-                .map(score -> ResponseEntity.ok().body(Map.of("rating", score)))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/api/playlists/{playlistId}/average")
+    @GetMapping("/{playlistId}/average")
     public ResponseEntity<AverageRatingDto> getAverageRating(@PathVariable String playlistId) {
         AverageRatingDto averageRating = ratingService.getAverageRating(playlistId);
         return ResponseEntity.ok(averageRating);

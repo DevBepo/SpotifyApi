@@ -120,8 +120,36 @@ h1, h2 {
     color: #b3b3b3;
 }
 
+/* Estilos para a média de avaliações */
+.average-rating {
+    background-color: #1a1a1a;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    border: 1px solid #333;
+}
+
+.average-stars {
+    font-size: 1.2rem;
+    color: #ffc107;
+    margin-right: 8px;
+}
+
+.average-number {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-right: 8px;
+}
+
+.rating-count {
+    font-size: 0.9rem;
+    color: #b3b3b3;
+}
+
 .stars {
     cursor: pointer;
+    margin-top: 10px;
 }
 
 .star {
