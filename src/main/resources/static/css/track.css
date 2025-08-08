@@ -104,3 +104,45 @@ h1, h2 {
     background-color: #535353;
     cursor: not-allowed;
 }
+
+/* Estilos para a seção de avaliação */
+.rating-container {
+    background-color: #282828;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.rating-container h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #b3b3b3;
+}
+
+.stars {
+    cursor: pointer;
+}
+
+.star {
+    font-size: 2.5rem;
+    color: #535353; /* Cor da estrela vazia */
+    transition: color 0.2s;
+    padding: 0 5px;
+}
+
+.star:hover,
+.star.hovered {
+    color: #ffc107; /* Cor ao passar o mouse */
+}
+
+.star.selected {
+    color: #1DB954; /* Cor da estrela selecionada/votada */
+}
+
+#rating-message {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #b3b3b3;
+    min-height: 20px;
+}

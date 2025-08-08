@@ -11,6 +11,17 @@
     <div class="main-container">
         <div class="playlist-container">
             <h1 id="playlist-title">Carregando Playlist...</h1>
+            <div class="rating-container">
+                <h3>Avalie esta Playlist:</h3>
+                <div class="stars">
+                    <span class="star" data-value="1">&#9733;</span>
+                    <span class="star" data-value="2">&#9733;</span>
+                    <span class="star" data-value="3">&#9733;</span>
+                    <span class="star" data-value="4">&#9733;</span>
+                    <span class="star" data-value="5">&#9733;</span>
+                </div>
+                <p id="rating-message"></p>
+            </div>
             <div class="playlist-header">
                 <div class="header-title">Título</div>
                 <div class="header-album">Álbum</div>
@@ -41,10 +52,11 @@
             return;
         }
 
-        // Carrega as músicas e os comentários em paralelo para mais velocidade
+        // Carrega as músicas, comentários e inicializa a avaliação em paralelo
         await Promise.all([
             fetchAndDisplayTracks(playlistId),
-            fetchAndDisplayComments(playlistId)
+            fetchAndDisplayComments(playlistId),
+            initializeRating(playlistId) // Adicionado para o sistema de avaliação
         ]);
 
         // Adiciona o evento de clique ao botão de postar
@@ -159,6 +171,75 @@
             postCommentBtn.disabled = false;
             postCommentBtn.textContent = 'Enviar';
         }
+    }
+
+    async function initializeRating(playlistId) {
+        const stars = document.querySelectorAll('.stars .star');
+        let currentRating = 0;
+
+        // Busca a avaliação existente do usuário
+        try {
+            const response = await fetch(`/api/playlists/${playlistId}/rate`);
+            if (response.ok) {
+                const data = await response.json();
+                currentRating = data.rating;
+                setFinalRating(currentRating);
+            }
+        } catch (error) {
+            console.error('Erro ao buscar avaliação existente:', error);
+        }
+
+        function updateStarsDisplay(rating) {
+            stars.forEach(star => {
+                star.classList.toggle('hovered', star.dataset.value <= rating);
+            });
+        }
+        
+        function setFinalRating(rating) {
+            currentRating = rating;
+            stars.forEach(star => {
+                star.classList.toggle('selected', star.dataset.value <= rating);
+                star.classList.remove('hovered');
+            });
+            const message = document.getElementById('rating-message');
+            if (rating > 0) {
+                message.textContent = `Sua avaliação: ${rating} estrela${rating > 1 ? 's' : ''}.`;
+            } else {
+                message.textContent = '';
+            }
+        }
+
+        stars.forEach(star => {
+            star.addEventListener('mouseover', () => {
+                if (currentRating === 0) updateStarsDisplay(star.dataset.value);
+            });
+
+            star.addEventListener('click', async () => {
+                const rating = star.dataset.value;
+                
+                try {
+                    const response = await fetch(`/api/playlists/${playlistId}/rate`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ rating: rating })
+                    });
+                    if (!response.ok) {
+                        throw new Error('Falha ao enviar avaliação.');
+                    }
+                    setFinalRating(rating);
+                    console.log('Avaliação enviada com sucesso!');
+                } catch (error) {
+                    console.error(error);
+                    alert(error.message);
+                }
+            });
+        });
+
+        document.querySelector('.stars').addEventListener('mouseout', () => {
+            if (currentRating === 0) {
+                stars.forEach(star => star.classList.remove('hovered'));
+            }
+        });
     }
     </script>
 </body> 
