@@ -104,12 +104,6 @@
 
     async function fetchAndDisplayComments(playlistId) {
         const commentsList = document.getElementById('comments-list');
-        try {
-            const response = await fetch(`/api/playlists/${playlistId}/comments`);
-            if (!response.ok) throw new Error('Erro ao buscar comentários');
-            
-            const comments = await response.json();
-            commentsList.innerHTML = ''; // Limpa a lista
             if (comments.length === 0) {
                 commentsList.innerHTML = '<p>Nenhum comentário ainda. Seja o primeiro!</p>';
             } else {
@@ -118,10 +112,6 @@
                     commentsList.appendChild(commentElement);
                 });
             }
-        } catch (error) {
-            console.error(error);
-            commentsList.innerHTML = '<p>Não foi possível carregar os comentários.</p>';
-        }
     }
     
     function createCommentElement(comment) {
