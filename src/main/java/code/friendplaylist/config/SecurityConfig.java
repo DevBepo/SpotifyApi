@@ -21,6 +21,7 @@ public class SecurityConfig {
                 .requestMatchers("/user/me", "/user/auth-status", "/user/search").authenticated()
                 .requestMatchers("/home.html").authenticated()
                 .requestMatchers("/playlists", "/playlists/**", "/users/*/playlists").authenticated()
+                .requestMatchers("/api/playlists/{playlistId}/rate").authenticated()
                 .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
@@ -36,7 +37,7 @@ public class SecurityConfig {
                 .deleteCookies("JSESSIONID")
             )
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**")
+                .ignoringRequestMatchers("/h2-console/**", "/api/**")
             )
             .headers(headers -> headers
                 .frameOptions(frameOptions -> frameOptions
