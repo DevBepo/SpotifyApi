@@ -133,9 +133,6 @@ A aplicação está configurada para deploy no Render com:
 - Variáveis de ambiente configuradas
 - PostgreSQL como banco de dados
 
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
 ## 🤝 Contribuição
 
@@ -148,10 +145,9 @@ Contribuições são bem-vindas! Por favor:
 
 ## 📞 Contato
 
-- **Desenvolvedor**: Seu Nome
-- **Email**: seu.email@exemplo.com
-- **LinkedIn**: [Seu LinkedIn](https://linkedin.com/in/seu-perfil)
-- **GitHub**: [Seu GitHub](https://github.com/seu-usuario)
+- **Desenvolvedor**: Jonas Lima 
+- **Email**: jonaslimadomingues@gmail.com
+- **LinkedIn**: [Seu LinkedIn](https://www.linkedin.com/in/devjonas/)
 
 ---
 
