@@ -147,7 +147,7 @@ Contribuições são bem-vindas! Por favor:
 
 - **Desenvolvedor**: Jonas Lima 
 - **Email**: jonaslimadomingues@gmail.com
-- **LinkedIn**: [Seu LinkedIn](https://www.linkedin.com/in/devjonas/)
+- **LinkedIn**: (https://www.linkedin.com/in/devjonas/)
 
 ---
 
