@@ -24,7 +24,7 @@ h1, h2 {
 }
 .playlist-header {
     display: grid;
-    grid-template-columns: 48px 4fr 2fr 100px;
+    grid-template-columns: 4fr 2fr 100px;
     gap: 16px;
     padding: 0 8px;
     color: #b3b3b3;
@@ -34,12 +34,22 @@ h1, h2 {
     text-transform: uppercase;
     align-items: center;
 }
-.header-title { grid-column: 2; }
-.header-album { grid-column: 3; }
-.header-duration { grid-column: 4; text-align: right; }
+
+.header-title {
+    grid-column: 1;
+}
+
+.header-album {
+    grid-column: 2;
+}
+
+.header-duration {
+    grid-column: 3;
+    text-align: right;
+}
 .track-item {
     display: grid;
-    grid-template-columns: 48px 4fr 2fr 100px;
+    grid-template-columns: 4fr 2fr 100px;
     gap: 16px;
     align-items: center;
     padding: 8px;
@@ -49,16 +59,59 @@ h1, h2 {
 .track-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
-.album-art {
+
+.track-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+}
+
+.album-cover {
     width: 40px;
     height: 40px;
     object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
 }
-.track-info { display: flex; flex-direction: column; overflow: hidden; }
-.track-name { font-size: 16px; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
-.artist-name { font-size: 14px; color: #b3b3b3; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
-.album-name { color: #b3b3b3; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.duration { color: #b3b3b3; font-size: 14px; text-align: right; }
+
+.track-details {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.track-title {
+    font-size: 16px;
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: #ffffff;
+}
+
+.track-artist {
+    font-size: 14px;
+    color: #b3b3b3;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.track-album {
+    color: #b3b3b3;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-duration {
+    color: #b3b3b3;
+    font-size: 14px;
+    text-align: right;
+}
 
 /* Estilos para a seção de comentários */
 #comments-list {
@@ -239,4 +292,89 @@ h1, h2 {
     font-size: 14px;
     color: #b3b3b3;
     min-height: 20px;
+}
+
+.comment-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.edit-comment-btn,
+.delete-comment-btn {
+    background: none;
+    border: none;
+    color: #b3b3b3;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.edit-comment-btn:hover {
+    background-color: #1DB954;
+    color: white;
+    transform: scale(1.1);
+}
+
+.delete-comment-btn:hover {
+    background-color: #ff4444;
+    color: white;
+    transform: scale(1.1);
+}
+
+.edit-comment-textarea {
+    width: 100%;
+    min-height: 60px;
+    background-color: #282828;
+    border: 1px solid #1DB954;
+    border-radius: 4px;
+    color: #ffffff;
+    padding: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    margin-bottom: 8px;
+}
+
+.edit-comment-textarea:focus {
+    outline: none;
+    border-color: #1ed760;
+    box-shadow: 0 0 0 2px rgba(30, 215, 96, 0.2);
+}
+
+.edit-comment-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.save-edit-btn,
+.cancel-edit-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.save-edit-btn {
+    background-color: #1DB954;
+    color: white;
+}
+
+.save-edit-btn:hover {
+    background-color: #1ed760;
+}
+
+.cancel-edit-btn {
+    background-color: #535353;
+    color: white;
+}
+
+.cancel-edit-btn:hover {
+    background-color: #727272;
 }

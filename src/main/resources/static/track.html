@@ -46,26 +46,51 @@
     </div>
 
     <script>
+    let currentUser = null; // Variável global para armazenar informações do usuário atual
+
     document.addEventListener('DOMContentLoaded', async () => {
         const params = new URLSearchParams(window.location.search);
         const playlistId = params.get('playlistId');
-        
+
         if (!playlistId) {
             document.getElementById('playlist-title').textContent = "ID da Playlist não fornecido.";
             return;
         }
 
-        // Carrega as músicas, comentários, média de avaliações e inicializa a avaliação em paralelo
-        await Promise.all([
-            fetchAndDisplayTracks(playlistId),
-            fetchAndDisplayComments(playlistId),
-            fetchAndDisplayAverageRating(playlistId), // Nova função para buscar a média
-            initializeRating(playlistId)
-        ]);
+        try {
+            // Busca informações do usuário atual PRIMEIRO
+            await fetchCurrentUser();
+
+            // Depois carrega o resto em paralelo
+            await Promise.all([
+                fetchAndDisplayTracks(playlistId),
+                fetchAndDisplayComments(playlistId),
+                fetchAndDisplayAverageRating(playlistId),
+                initializeRating(playlistId)
+            ]);
+        } catch (error) {
+            console.error('Erro ao carregar dados:', error);
+        }
 
         // Adiciona o evento de clique ao botão de postar
         document.getElementById('post-comment-btn').addEventListener('click', () => postComment(playlistId));
     });
+
+    async function fetchCurrentUser() {
+        try {
+            const response = await fetch('/user/me');
+            if (response.ok) {
+                currentUser = await response.json();
+                console.log('Usuário atual carregado:', currentUser);
+            } else {
+                console.warn('Não foi possível carregar o usuário atual');
+                currentUser = null;
+            }
+        } catch (error) {
+            console.error('Erro ao buscar usuário atual:', error);
+            currentUser = null;
+        }
+    }
 
     async function fetchAndDisplayTracks(playlistId) {
         const titleContainer = document.getElementById('playlist-title');
@@ -149,21 +174,27 @@
     function createCommentElement(comment) {
         const commentDiv = document.createElement('div');
         commentDiv.className = 'comment';
+        commentDiv.setAttribute('data-comment-id', comment.id);
 
         // URL da imagem padrão caso o usuário não tenha foto
         const defaultImageUrl = 'https://via.placeholder.com/40x40/1DB954/ffffff?text=U';
         const imageUrl = comment.authorImageUrl || defaultImageUrl;
 
         // Verifica se o usuário atual é o dono do comentário
-        const isOwner = currentUser && currentUser.id === comment.authorId;
-        const deleteButton = isOwner ? `<button class="delete-comment-btn" onclick="deleteComment(${comment.id})" title="Deletar comentário">🗑️</button>` : '';
+        const isOwner = currentUser && currentUser.id && currentUser.id === comment.authorId;
+        const actionButtons = isOwner ? `
+            <div class="comment-actions">
+                <button class="edit-comment-btn" onclick="editComment(${comment.id})" title="Editar comentário">✏️</button>
+                <button class="delete-comment-btn" onclick="deleteComment(${comment.id})" title="Deletar comentário">🗑️</button>
+            </div>
+        ` : '';
 
         commentDiv.innerHTML = `
             <img src="${imageUrl}" alt="Foto do usuário" class="comment-author-img" onerror="this.src='${defaultImageUrl}'">
             <div class="comment-content">
                 <div class="comment-header">
                     <div class="comment-author-name">${comment.author}</div>
-                    ${deleteButton}
+                    ${actionButtons}
                 </div>
                 <p class="comment-text">${comment.text}</p>
                 <div class="comment-date">${new Date(comment.createdAt).toLocaleString('pt-BR')}</div>
@@ -193,13 +224,12 @@
             });
             if (!response.ok) throw new Error('Erro ao enviar comentário');
 
-            const newComment = await response.json();
-            const commentsList = document.getElementById('comments-list');
-            if (commentsList.querySelector('p')) {
-                commentsList.innerHTML = '';
-            }
-            commentsList.prepend(createCommentElement(newComment));
+            // Limpa o campo de texto
             commentInput.value = '';
+
+            // Recarrega todos os comentários para garantir consistência
+            await fetchAndDisplayComments(playlistId);
+
         } catch (error) {
             console.error(error);
             alert('Não foi possível enviar seu comentário.');
@@ -334,6 +364,87 @@
             alert('Erro ao deletar comentário. Tente novamente.');
         }
     }
+
+    function editComment(commentId) {
+        const commentDiv = document.querySelector(`[data-comment-id="${commentId}"]`);
+        const commentTextElement = commentDiv.querySelector('.comment-text');
+        const currentText = commentTextElement.textContent;
+
+        // Salva o texto original para poder cancelar
+        commentDiv.setAttribute('data-original-text', currentText);
+
+        // Substitui o texto por um textarea
+        commentTextElement.innerHTML = `
+            <textarea class="edit-comment-textarea" maxlength="1000">${currentText}</textarea>
+            <div class="edit-comment-actions">
+                <button class="save-edit-btn" onclick="saveEditedComment(${commentId})">Salvar</button>
+                <button class="cancel-edit-btn" onclick="cancelEdit(${commentId})">Cancelar</button>
+            </div>
+        `;
+
+        // Foca no textarea
+        const textarea = commentTextElement.querySelector('.edit-comment-textarea');
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
+        // Esconde os botões de ação originais
+        const actionButtons = commentDiv.querySelector('.comment-actions');
+        if (actionButtons) {
+            actionButtons.style.display = 'none';
+        }
+    }
+
+    async function saveEditedComment(commentId) {
+        const commentDiv = document.querySelector(`[data-comment-id="${commentId}"]`);
+        const textarea = commentDiv.querySelector('.edit-comment-textarea');
+        const newText = textarea.value.trim();
+
+        if (!newText) {
+            alert('O comentário não pode estar vazio.');
+            return;
+        }
+
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const playlistId = params.get('playlistId');
+
+            const response = await fetch(`/api/playlists/${playlistId}/comments/${commentId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: newText })
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao editar comentário');
+            }
+
+            // Recarrega os comentários após editar
+            await fetchAndDisplayComments(playlistId);
+
+        } catch (error) {
+            console.error('Erro ao editar comentário:', error);
+            alert('Erro ao editar comentário. Tente novamente.');
+        }
+    }
+
+    function cancelEdit(commentId) {
+        const commentDiv = document.querySelector(`[data-comment-id="${commentId}"]`);
+        const commentTextElement = commentDiv.querySelector('.comment-text');
+        const originalText = commentDiv.getAttribute('data-original-text');
+
+        // Restaura o texto original
+        commentTextElement.textContent = originalText;
+
+        // Mostra os botões de ação originais
+        const actionButtons = commentDiv.querySelector('.comment-actions');
+        if (actionButtons) {
+            actionButtons.style.display = 'flex';
+        }
+
+        // Remove o atributo de texto original
+        commentDiv.removeAttribute('data-original-text');
+    }
+    </script>
     </script>
 </body> 
 </html>

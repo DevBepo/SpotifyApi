@@ -35,6 +35,18 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
+    @PutMapping("/{commentId}")
+    public ResponseEntity<CommentResponseDto> editComment(
+            @PathVariable String playlistId,
+            @PathVariable Long commentId,
+            @RequestBody CommentDto commentDto,
+            @AuthenticationPrincipal OAuth2User principal) {
+        
+        String userId = principal.getName();
+        CommentResponseDto updatedComment = commentService.editComment(commentId, commentDto, userId);
+        return ResponseEntity.ok(updatedComment);
+    }
+
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable String playlistId,
