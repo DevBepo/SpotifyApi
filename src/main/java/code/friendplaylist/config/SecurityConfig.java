@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .requestMatchers("/home.html").authenticated()
                 .requestMatchers("/playlists", "/playlists/**", "/users/*/playlists").authenticated()
                 .requestMatchers("/api/playlists/{playlistId}/rate").authenticated()
-                .requestMatchers("/api/playlists/{playlistId}/comments").authenticated() // Comentários precisam de autenticação
+                .requestMatchers("/api/playlists/{playlistId}/comments/**").authenticated() // Comentários (GET, POST, DELETE) precisam de autenticação
                 .requestMatchers("/api/playlists/{playlistId}/average").permitAll() // Média pode ser pública
                 .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()

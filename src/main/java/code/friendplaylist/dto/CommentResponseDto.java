@@ -5,15 +5,17 @@ import java.time.LocalDateTime;
 public class CommentResponseDto {
     private Long id;
     private String author;
+    private String authorId;
     private String authorImageUrl;
     private String text;
     private LocalDateTime createdAt;
 
     public CommentResponseDto() {}
 
-    public CommentResponseDto(Long id, String author, String authorImageUrl, String text, LocalDateTime createdAt) {
+    public CommentResponseDto(Long id, String author, String authorId, String authorImageUrl, String text, LocalDateTime createdAt) {
         this.id = id;
         this.author = author;
+        this.authorId = authorId;
         this.authorImageUrl = authorImageUrl;
         this.text = text;
         this.createdAt = createdAt;
@@ -34,6 +36,14 @@ public class CommentResponseDto {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
     }
 
     public String getAuthorImageUrl() {

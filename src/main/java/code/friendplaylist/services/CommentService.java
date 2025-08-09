@@ -41,10 +41,24 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void deleteComment(Long commentId, String userId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comentário não encontrado com ID: " + commentId));
+
+        // Verificar se o usuário é o dono do comentário
+        if (!comment.getUser().getId().equals(userId)) {
+            throw new RuntimeException("Você só pode deletar seus próprios comentários");
+        }
+
+        commentRepository.delete(comment);
+    }
+
     private CommentResponseDto convertToResponseDto(Comment comment) {
         return new CommentResponseDto(
                 comment.getId(),
                 comment.getUser().getDisplayName(),
+                comment.getUser().getId(),
                 comment.getUser().getImageUrl(),
                 comment.getText(),
                 comment.getCreatedAt()

@@ -154,10 +154,17 @@
         const defaultImageUrl = 'https://via.placeholder.com/40x40/1DB954/ffffff?text=U';
         const imageUrl = comment.authorImageUrl || defaultImageUrl;
 
+        // Verifica se o usuário atual é o dono do comentário
+        const isOwner = currentUser && currentUser.id === comment.authorId;
+        const deleteButton = isOwner ? `<button class="delete-comment-btn" onclick="deleteComment(${comment.id})" title="Deletar comentário">🗑️</button>` : '';
+
         commentDiv.innerHTML = `
             <img src="${imageUrl}" alt="Foto do usuário" class="comment-author-img" onerror="this.src='${defaultImageUrl}'">
             <div class="comment-content">
-                <div class="comment-author-name">${comment.author}</div>
+                <div class="comment-header">
+                    <div class="comment-author-name">${comment.author}</div>
+                    ${deleteButton}
+                </div>
                 <p class="comment-text">${comment.text}</p>
                 <div class="comment-date">${new Date(comment.createdAt).toLocaleString('pt-BR')}</div>
             </div>
@@ -300,6 +307,32 @@
                 stars.forEach(star => star.classList.remove('hovered'));
             }
         });
+    }
+
+    async function deleteComment(commentId) {
+        if (!confirm('Tem certeza que deseja deletar este comentário?')) {
+            return;
+        }
+
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const playlistId = params.get('playlistId');
+
+            const response = await fetch(`/api/playlists/${playlistId}/comments/${commentId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao deletar comentário');
+            }
+
+            // Recarrega os comentários após deletar
+            await fetchAndDisplayComments(playlistId);
+
+        } catch (error) {
+            console.error('Erro ao deletar comentário:', error);
+            alert('Erro ao deletar comentário. Tente novamente.');
+        }
     }
     </script>
 </body> 

@@ -34,4 +34,15 @@ public class CommentController {
         List<CommentResponseDto> comments = commentService.getCommentsByPlaylistId(playlistId);
         return ResponseEntity.ok(comments);
     }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(
+            @PathVariable String playlistId,
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal OAuth2User principal) {
+        
+        String userId = principal.getName();
+        commentService.deleteComment(commentId, userId);
+        return ResponseEntity.noContent().build();
+    }
 }
