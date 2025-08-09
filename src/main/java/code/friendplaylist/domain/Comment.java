@@ -2,6 +2,7 @@ package code.friendplaylist.domain;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import code.friendplaylist.util.DateTimeUtil;
 
 @Entity
 @Table(name = "tb_comment")
@@ -24,19 +25,17 @@ public class Comment {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    // Constructors
     public Comment() {
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = DateTimeUtil.nowInBrazil();
     }
 
     public Comment(User user, String playlistId, String text) {
         this.user = user;
         this.playlistId = playlistId;
         this.text = text;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = DateTimeUtil.nowInBrazil();
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

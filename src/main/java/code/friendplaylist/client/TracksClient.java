@@ -16,8 +16,5 @@ public interface TracksClient {
     @GetMapping("/playlists/{playlist_id}/tracks")
     SpotifyTrackResponse getTracks(
         @RequestHeader("Authorization") String authorization,
-        @PathVariable("playlist_id") String playlistId
-    );
-
-
+        @PathVariable("playlist_id") String playlistId);
 }

@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-import code.friendplaylist.client.playlistDTO.PlaylistResponse;
+import code.friendplaylist.client.playlist.PlaylistResponse;
 
 @FeignClient(
     name = "spotify-client",

@@ -10,7 +10,6 @@ public class AverageRatingDto {
         this.ratingCount = ratingCount;
     }
 
-    // Getters and Setters
     public double getAverageRating() {
         return averageRating;
     }

@@ -18,7 +18,7 @@ public class Rating {
     private String playlistId;
 
     @Column(nullable = false)
-    private int score; // 1 a 5
+    private int score; 
 
     public Rating() {}
 

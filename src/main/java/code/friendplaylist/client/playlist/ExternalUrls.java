@@ -1,4 +1,4 @@
-package code.friendplaylist.client.playlistDTO;
+package code.friendplaylist.client.playlist;
 
 public record ExternalUrls(String spotify) {
 

@@ -2,6 +2,7 @@ package code.friendplaylist.dto;
 
 import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Schema(description = "DTO de resposta contendo informações completas do comentário")
 public class CommentResponseDto {
@@ -22,6 +23,7 @@ public class CommentResponseDto {
     private String text;
 
     @Schema(description = "Data e hora de criação do comentário", example = "2024-01-15T10:30:00")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "America/Sao_Paulo")
     private LocalDateTime createdAt;
 
     public CommentResponseDto() {}
@@ -35,7 +37,6 @@ public class CommentResponseDto {
         this.createdAt = createdAt;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

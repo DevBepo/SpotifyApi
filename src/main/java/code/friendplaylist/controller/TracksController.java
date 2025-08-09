@@ -32,11 +32,11 @@ public class TracksController {
 
      @GetMapping("/api/playlists/{playlist_id}/tracks")
      @Operation(
-         summary = "Obter faixas de uma playlist",
-         description = "Retorna todas as faixas de uma playlist específica do Spotify"
+         summary = "Obter músicas de uma playlist",
+         description = "Retorna todas as músicas de uma playlist específica do Spotify"
      )
      @ApiResponses(value = {
-         @ApiResponse(responseCode = "200", description = "Faixas da playlist retornadas com sucesso",
+         @ApiResponse(responseCode = "200", description = "tracks da playlist retornadas com sucesso",
                  content = @Content(schema = @Schema(implementation = SpotifyTrackResponse.class))),
          @ApiResponse(responseCode = "401", description = "Usuário não autenticado"),
          @ApiResponse(responseCode = "404", description = "Playlist não encontrada"),

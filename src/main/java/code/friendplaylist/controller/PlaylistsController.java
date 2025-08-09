@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import code.friendplaylist.client.PlaylistClient;
-import code.friendplaylist.client.playlistDTO.PlaylistResponse;
+import code.friendplaylist.client.playlist.PlaylistResponse;
 import code.friendplaylist.services.UserService;
 
 @RestController

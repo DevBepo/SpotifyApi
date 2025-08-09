@@ -5,7 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import code.friendplaylist.client.playlistDTO.ExternalUrls;
+import code.friendplaylist.client.playlist.ExternalUrls;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)

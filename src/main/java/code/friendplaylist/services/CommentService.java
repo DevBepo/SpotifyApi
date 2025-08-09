@@ -6,6 +6,7 @@ import code.friendplaylist.dto.CommentDto;
 import code.friendplaylist.dto.CommentResponseDto;
 import code.friendplaylist.repository.CommentRepository;
 import code.friendplaylist.repository.UserRepository;
+import code.friendplaylist.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,13 +50,12 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comentário não encontrado com ID: " + commentId));
 
-        // Verificar se o usuário é o dono do comentário
         if (!comment.getUser().getId().equals(userId)) {
             throw new RuntimeException("Você só pode editar seus próprios comentários");
         }
 
         comment.setText(commentDto.getText());
-        comment.setCreatedAt(LocalDateTime.now());
+        comment.setCreatedAt(DateTimeUtil.nowInBrazil());
         
         Comment updatedComment = commentRepository.save(comment);
         return convertToResponseDto(updatedComment);
@@ -66,7 +66,6 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comentário não encontrado com ID: " + commentId));
 
-        // Verificar se o usuário é o dono do comentário OU se é o administrador
         boolean isOwner = comment.getUser().getId().equals(userId);
         boolean isAdmin = ADMIN_USER_ID.equals(userId);
         

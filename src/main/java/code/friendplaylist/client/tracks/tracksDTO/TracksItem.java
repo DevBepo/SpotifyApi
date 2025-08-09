@@ -3,7 +3,7 @@ package code.friendplaylist.client.tracks.tracksDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import code.friendplaylist.client.playlistDTO.Owner;
+import code.friendplaylist.client.playlist.Owner;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
