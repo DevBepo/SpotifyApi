@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
+
+    // ID do administrador/dono do sistema - substitua pelo seu ID do Spotify
+    private static final String ADMIN_USER_ID = "znoogh"; // ID do administrador znoogh
 
     @Autowired
     private CommentRepository commentRepository;
@@ -39,7 +41,7 @@ public class CommentService {
         List<Comment> comments = commentRepository.findByPlaylistIdOrderByCreatedAtDesc(playlistId);
         return comments.stream()
                 .map(this::convertToResponseDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -52,9 +54,8 @@ public class CommentService {
             throw new RuntimeException("Você só pode editar seus próprios comentários");
         }
 
-        // Atualizar o texto do comentário
         comment.setText(commentDto.getText());
-        comment.setCreatedAt(LocalDateTime.now()); // Atualiza o timestamp para mostrar que foi editado
+        comment.setCreatedAt(LocalDateTime.now());
         
         Comment updatedComment = commentRepository.save(comment);
         return convertToResponseDto(updatedComment);
@@ -65,8 +66,11 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comentário não encontrado com ID: " + commentId));
 
-        // Verificar se o usuário é o dono do comentário
-        if (!comment.getUser().getId().equals(userId)) {
+        // Verificar se o usuário é o dono do comentário OU se é o administrador
+        boolean isOwner = comment.getUser().getId().equals(userId);
+        boolean isAdmin = ADMIN_USER_ID.equals(userId);
+        
+        if (!isOwner && !isAdmin) {
             throw new RuntimeException("Você só pode deletar seus próprios comentários");
         }
 
@@ -74,13 +78,18 @@ public class CommentService {
     }
 
     private CommentResponseDto convertToResponseDto(Comment comment) {
-        return new CommentResponseDto(
-                comment.getId(),
-                comment.getUser().getDisplayName(),
-                comment.getUser().getId(),
-                comment.getUser().getImageUrl(),
-                comment.getText(),
-                comment.getCreatedAt()
-        );
+        CommentResponseDto dto = new CommentResponseDto();
+        dto.setId(comment.getId());
+        dto.setText(comment.getText());
+        dto.setCreatedAt(comment.getCreatedAt());
+        dto.setAuthorId(comment.getUser().getId());
+        dto.setAuthor(comment.getUser().getDisplayName());
+        dto.setAuthorImageUrl(comment.getUser().getImageUrl());
+        return dto;
+    }
+
+    // Método para verificar se um usuário é administrador
+    public boolean isAdmin(String userId) {
+        return ADMIN_USER_ID.equals(userId);
     }
 }

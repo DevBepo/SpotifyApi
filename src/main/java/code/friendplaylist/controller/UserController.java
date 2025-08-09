@@ -41,8 +41,19 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public List<UserSearchResultDTO> searchUsers(@RequestParam("q") String query) {
-        return userService.searchUsers(query);
+    public ResponseEntity<List<UserSearchResultDTO>> searchUsers(@RequestParam("q") String query) {
+        List<UserSearchResultDTO> users = userService.searchUsers(query);
+        return ResponseEntity.ok(users);
     }
-    
+
+    // Endpoint para obter o ID do usuário atual (útil para configurar o administrador)
+    @GetMapping("/id")
+    public ResponseEntity<String> getCurrentUserId(OAuth2AuthenticationToken authentication) {
+        try {
+            UserDto userDto = userService.getCurrentUser(authentication);
+            return ResponseEntity.ok(userDto.getId());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao obter ID do usuário: " + e.getMessage());
+        }
+    }
 }

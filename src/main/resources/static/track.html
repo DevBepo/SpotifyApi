@@ -48,6 +48,9 @@
     <script>
     let currentUser = null; // Variável global para armazenar informações do usuário atual
 
+    // ID do administrador/dono do sistema - substitua pelo seu ID do Spotify
+    const ADMIN_USER_ID = "znoogh"; // ID do administrador znoogh
+
     let currentPlaylistData = null;
     let currentPage = 0;
     const TRACKS_PER_PAGE = 20; // Número de músicas por página
@@ -257,14 +260,28 @@
         const defaultImageUrl = 'https://via.placeholder.com/40x40/1DB954/ffffff?text=U';
         const imageUrl = comment.authorImageUrl || defaultImageUrl;
 
-        // Verifica se o usuário atual é o dono do comentário
+        // Verifica permissões do usuário atual
         const isOwner = currentUser && currentUser.id && currentUser.id === comment.authorId;
-        const actionButtons = isOwner ? `
-            <div class="comment-actions">
-                <button class="edit-comment-btn" onclick="editComment(${comment.id})" title="Editar comentário">✏️</button>
-                <button class="delete-comment-btn" onclick="deleteComment(${comment.id})" title="Deletar comentário">🗑️</button>
-            </div>
-        ` : '';
+        const isAdmin = currentUser && currentUser.id && currentUser.id === ADMIN_USER_ID;
+
+        // Lógica dos botões de ação
+        let actionButtons = '';
+        if (isOwner) {
+            // Dono do comentário: pode editar e deletar
+            actionButtons = `
+                <div class="comment-actions">
+                    <button class="edit-comment-btn" onclick="editComment(${comment.id})" title="Editar comentário">✏️</button>
+                    <button class="delete-comment-btn" onclick="deleteComment(${comment.id})" title="Deletar comentário">🗑️</button>
+                </div>
+            `;
+        } else if (isAdmin) {
+            // Administrador: pode apenas deletar comentários de outros
+            actionButtons = `
+                <div class="comment-actions">
+                    <button class="delete-comment-btn admin-delete" onclick="deleteComment(${comment.id})" title="Deletar comentário (Admin)">🗑️</button>
+                </div>
+            `;
+        }
 
         commentDiv.innerHTML = `
             <img src="${imageUrl}" alt="Foto do usuário" class="comment-author-img" onerror="this.src='${defaultImageUrl}'">

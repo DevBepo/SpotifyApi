@@ -434,3 +434,16 @@ h1, h2 {
 .load-more-btn:active {
     transform: scale(0.98);
 }
+
+/* Botão de delete do administrador */
+.admin-delete {
+    background-color: #ff6b35 !important;
+    border: 1px solid #ff4444;
+}
+
+.admin-delete:hover {
+    background-color: #ff4444 !important;
+    color: white !important;
+    transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(255, 68, 68, 0.5);
+}
