@@ -18,14 +18,19 @@ public class RatingController {
     private RatingService ratingService;
 
     @PostMapping("/api/playlists/{playlistId}/rate")
-    public ResponseEntity<Void> ratePlaylist(@PathVariable String playlistId, @RequestBody RatingDto ratingDto, @AuthenticationPrincipal OAuth2User principal) {
+    public ResponseEntity<Void> ratePlaylist(
+            @PathVariable String playlistId,
+            @RequestBody RatingDto ratingDto,
+            @AuthenticationPrincipal OAuth2User principal) {
         String userId = principal.getName();
         ratingService.saveRating(playlistId, ratingDto, userId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/api/playlists/{playlistId}/rate")
-    public ResponseEntity<?> getRating(@PathVariable String playlistId, @AuthenticationPrincipal OAuth2User principal) {
+    public ResponseEntity<?> getRating(
+            @PathVariable String playlistId,
+            @AuthenticationPrincipal OAuth2User principal) {
         String userId = principal.getName();
         return ratingService.getRating(playlistId, userId)
                 .map(score -> ResponseEntity.ok().body(Map.of("rating", score)))

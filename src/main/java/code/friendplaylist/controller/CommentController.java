@@ -23,7 +23,7 @@ public class CommentController {
             @PathVariable String playlistId,
             @RequestBody CommentDto commentDto,
             @AuthenticationPrincipal OAuth2User principal) {
-        
+
         String userId = principal.getName();
         CommentResponseDto comment = commentService.addComment(playlistId, commentDto, userId);
         return ResponseEntity.ok(comment);
@@ -41,7 +41,7 @@ public class CommentController {
             @PathVariable Long commentId,
             @RequestBody CommentDto commentDto,
             @AuthenticationPrincipal OAuth2User principal) {
-        
+
         String userId = principal.getName();
         CommentResponseDto updatedComment = commentService.editComment(commentId, commentDto, userId);
         return ResponseEntity.ok(updatedComment);
@@ -52,7 +52,7 @@ public class CommentController {
             @PathVariable String playlistId,
             @PathVariable Long commentId,
             @AuthenticationPrincipal OAuth2User principal) {
-        
+
         String userId = principal.getName();
         commentService.deleteComment(commentId, userId);
         return ResponseEntity.noContent().build();

@@ -46,7 +46,6 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    // Endpoint para obter o ID do usuário atual (útil para configurar o administrador)
     @GetMapping("/id")
     public ResponseEntity<String> getCurrentUserId(OAuth2AuthenticationToken authentication) {
         try {

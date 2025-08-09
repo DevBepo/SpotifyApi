@@ -13,7 +13,7 @@ import code.friendplaylist.services.UserService;
 @RestController
 public class PlaylistsController {
      private final UserService userService;
-     private final PlaylistClient playlistClient;    
+     private final PlaylistClient playlistClient;
      public PlaylistsController(UserService userService, PlaylistClient playlistClient) {
          this.userService = userService;
          this.playlistClient = playlistClient;
@@ -21,7 +21,7 @@ public class PlaylistsController {
 
      @GetMapping("/playlists")
      public ResponseEntity<PlaylistResponse> getPlaylists(OAuth2AuthenticationToken authentication) {
-        String accessToken = userService.getAccessToken(authentication);  
+        String accessToken = userService.getAccessToken(authentication);
         PlaylistResponse response = playlistClient.getPlaylists("Bearer " + accessToken);
         return ResponseEntity.ok(response);
      }
@@ -31,7 +31,7 @@ public class PlaylistsController {
             @PathVariable("user_id") String userId,
             OAuth2AuthenticationToken authentication) {
                 String accessToken = userService.getAccessToken(authentication);
-                System.out.println("Buscando playlists para o usuário: " + userId); 
+                System.out.println("Buscando playlists para o usuário: " + userId);
                 PlaylistResponse response = playlistClient.getUsersPlaylists("Bearer " + accessToken, userId) ;
                 return ResponseEntity.ok(response);
             }

@@ -16,8 +16,8 @@ import java.util.List;
 @Service
 public class CommentService {
 
-    // ID do administrador/dono do sistema - substitua pelo seu ID do Spotify
-    private static final String ADMIN_USER_ID = "znoogh"; // ID do administrador znoogh
+    
+    private static final String ADMIN_USER_ID = "znoogh"; 
 
     @Autowired
     private CommentRepository commentRepository;
@@ -88,7 +88,6 @@ public class CommentService {
         return dto;
     }
 
-    // Método para verificar se um usuário é administrador
     public boolean isAdmin(String userId) {
         return ADMIN_USER_ID.equals(userId);
     }

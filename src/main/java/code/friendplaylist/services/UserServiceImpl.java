@@ -132,4 +132,12 @@ public UserDto getCurrentUser(OAuth2AuthenticationToken authentication) {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public User getLoggedInUser(OAuth2AuthenticationToken authentication) {
+        OAuth2User spotifyUser = authentication.getPrincipal();
+        String userId = spotifyUser.getName();
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + userId));
+    }
+
 }

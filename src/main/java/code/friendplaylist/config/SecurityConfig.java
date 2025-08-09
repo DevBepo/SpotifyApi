@@ -18,6 +18,8 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/login/**", "/login.html", "/css/**", "/error", "/css/**", "/js/**").permitAll()
+                // Swagger/OpenAPI endpoints
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/user/me", "/user/auth-status", "/user/search").authenticated()
                 .requestMatchers("/home.html").authenticated()
                 .requestMatchers("/playlists", "/playlists/**", "/users/*/playlists").authenticated()

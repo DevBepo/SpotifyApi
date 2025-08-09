@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import code.friendplaylist.domain.User;
 import code.friendplaylist.dto.UserDto;
 import code.friendplaylist.dto.UserSearchResultDTO;
 
@@ -19,4 +20,6 @@ public interface UserService {
     String getAccessToken(OAuth2AuthenticationToken authentication);
 
     List<UserSearchResultDTO> searchUsers(String query);
+
+    User getLoggedInUser(OAuth2AuthenticationToken authentication);
 }
