@@ -19,5 +19,4 @@ public interface PlaylistClient {
     PlaylistResponse getUsersPlaylists(
         @RequestHeader("Authorization") String authorization,
         @PathVariable("user_id") String userId);
-    
 }

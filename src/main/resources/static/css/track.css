@@ -17,6 +17,38 @@ body {
     border-radius: 8px;
     padding: 24px;
 }
+
+.playlist-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh; /* Limita a altura máxima */
+}
+
+#playlist-content {
+    flex: 1;
+    overflow-y: auto; /* Adiciona scroll vertical */
+    max-height: 60vh; /* Altura máxima para a lista de músicas */
+    padding-right: 8px; /* Espaço para a scrollbar */
+}
+
+/* Estilização da scrollbar */
+#playlist-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+#playlist-content::-webkit-scrollbar-track {
+    background: #282828;
+    border-radius: 4px;
+}
+
+#playlist-content::-webkit-scrollbar-thumb {
+    background: #1DB954;
+    border-radius: 4px;
+}
+
+#playlist-content::-webkit-scrollbar-thumb:hover {
+    background: #1ed760;
+}
 h1, h2 {
     border-bottom: 1px solid #282828;
     padding-bottom: 10px;
@@ -377,4 +409,28 @@ h1, h2 {
 
 .cancel-edit-btn:hover {
     background-color: #727272;
+}
+
+/* Botão Carregar Mais */
+.load-more-btn {
+    width: 100%;
+    padding: 12px 24px;
+    margin: 16px 0;
+    background-color: #1DB954;
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.load-more-btn:hover {
+    background-color: #1ed760;
+    transform: scale(1.02);
+}
+
+.load-more-btn:active {
+    transform: scale(0.98);
 }

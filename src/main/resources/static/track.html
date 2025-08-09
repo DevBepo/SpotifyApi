@@ -48,6 +48,10 @@
     <script>
     let currentUser = null; // Variável global para armazenar informações do usuário atual
 
+    let currentPlaylistData = null;
+    let currentPage = 0;
+    const TRACKS_PER_PAGE = 20; // Número de músicas por página
+
     document.addEventListener('DOMContentLoaded', async () => {
         const params = new URLSearchParams(window.location.search);
         const playlistId = params.get('playlistId');
@@ -92,6 +96,19 @@
         }
     }
 
+    async function fetchPlaylistName(playlistId) {
+        try {
+            const response = await fetch(`/api/playlists/${playlistId}`);
+            if (response.ok) {
+                const playlistDetails = await response.json();
+                const titleContainer = document.getElementById('playlist-title');
+                titleContainer.textContent = `Playlist: ${playlistDetails.name}`;
+            }
+        } catch (error) {
+            console.error('Erro ao buscar nome da playlist:', error);
+        }
+    }
+
     async function fetchAndDisplayTracks(playlistId) {
         const titleContainer = document.getElementById('playlist-title');
         try {
@@ -106,6 +123,9 @@
     }
 
     function renderPlaylist(playlistData) {
+        currentPlaylistData = playlistData;
+        currentPage = 0;
+
         const contentContainer = document.getElementById('playlist-content');
         const titleContainer = document.getElementById('playlist-title');
         contentContainer.innerHTML = '';
@@ -115,7 +135,22 @@
             return;
         }
 
-        titleContainer.textContent = `Exibindo ${playlistData.items.length} de ${playlistData.total} Músicas`;
+        // Define o título da playlist
+        titleContainer.textContent = `Playlist: ${playlistData.total} músicas`;
+
+        // Renderiza a primeira página
+        renderTracksPage();
+
+        // Adiciona botão "Carregar mais" se houver mais músicas
+        if (playlistData.items.length > TRACKS_PER_PAGE) {
+            addLoadMoreButton();
+        }
+    }
+
+    function renderTracksPage() {
+        const contentContainer = document.getElementById('playlist-content');
+        const startIndex = currentPage * TRACKS_PER_PAGE;
+        const endIndex = Math.min(startIndex + TRACKS_PER_PAGE, currentPlaylistData.items.length);
 
         function formatDuration(ms) {
             const totalSeconds = Math.floor(ms / 1000);
@@ -124,9 +159,18 @@
             return `${minutes}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        playlistData.items.forEach(item => {
+        // Remove o botão "Carregar mais" se existir
+        const existingButton = contentContainer.querySelector('.load-more-btn');
+        if (existingButton) {
+            existingButton.remove();
+        }
+
+        // Renderiza as músicas da página atual
+        for (let i = startIndex; i < endIndex; i++) {
+            const item = currentPlaylistData.items[i];
             const track = item.track;
-            if (!track || !track.album) return;
+            if (!track || !track.album) continue;
+
             const imageUrl = track.album.images[0]?.url || 'https://via.placeholder.com/40';
 
             const trackElement = document.createElement('div');
@@ -142,8 +186,41 @@
                 <div class="track-album">${track.album.name}</div>
                 <div class="track-duration">${formatDuration(track.duration_ms)}</div>
             `;
+
             contentContainer.appendChild(trackElement);
-        });
+        }
+
+        currentPage++;
+    }
+
+    function addLoadMoreButton() {
+        const contentContainer = document.getElementById('playlist-content');
+        const loadMoreBtn = document.createElement('button');
+        loadMoreBtn.className = 'load-more-btn';
+        loadMoreBtn.textContent = 'Carregar mais músicas';
+        loadMoreBtn.onclick = loadMoreTracks;
+        contentContainer.appendChild(loadMoreBtn);
+    }
+
+    function loadMoreTracks() {
+        const startIndex = currentPage * TRACKS_PER_PAGE;
+
+        if (startIndex >= currentPlaylistData.items.length) {
+            // Remove o botão se não há mais músicas
+            const loadMoreBtn = document.querySelector('.load-more-btn');
+            if (loadMoreBtn) {
+                loadMoreBtn.remove();
+            }
+            return;
+        }
+
+        renderTracksPage();
+
+        // Adiciona o botão novamente se ainda há mais músicas
+        const nextStartIndex = currentPage * TRACKS_PER_PAGE;
+        if (nextStartIndex < currentPlaylistData.items.length) {
+            addLoadMoreButton();
+        }
     }
 
     async function fetchAndDisplayComments(playlistId) {
