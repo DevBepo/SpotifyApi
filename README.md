@@ -1,6 +1,8 @@
-# FriendPlaylist 🎵 https://friendplaylist-app.onrender.com/
+# FriendPlaylist 🎵 
 
 Uma aplicação web para visualizar, avaliar e comentar playlists do Spotify com seus amigos.
+
+https://friendplaylist-app.onrender.com/
 
 ## 🚀 Funcionalidades
 
